@@ -10,6 +10,8 @@ public class Window extends JFrame implements KeyListener {
     public static int width = 400;
     public static int height = 400;
     
+    Character arbok;
+    
     public Window(){
         setTitle("Jeu Snake 0.1 2017 (Alpha)");
         setSize(width, height);
@@ -27,6 +29,12 @@ public class Window extends JFrame implements KeyListener {
         
         // On affiche la fenêtre
         setVisible(true);
+        
+        arbok = new Character(this.getGraphics(),4);
+    }
+    
+    public void startGame(){
+        arbok.play();
     }
 
     @Override
