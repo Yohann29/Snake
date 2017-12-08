@@ -6,5 +6,5 @@ public class Snake {
         Window fenetre = new Window();
         fenetre.startGame();
     }
-    
+
 }

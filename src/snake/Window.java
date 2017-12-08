@@ -6,6 +6,7 @@ import javax.swing.*;
 
 public class Window extends JFrame implements KeyListener {
 
+    // On crée le panel
     JPanel container = new JPanel();
 
     public static int width = 400;
@@ -35,6 +36,7 @@ public class Window extends JFrame implements KeyListener {
         // On affiche la fenêtre
         setVisible(true);
 
+        // On crée le serpent
         arbok = new Character(this.getGraphics(), 4);
     }
 

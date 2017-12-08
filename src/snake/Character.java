@@ -10,7 +10,7 @@ public class Character extends JPanel {
     public int size;
     Graphics g;
     public boolean play = true;
-    public int numberOfEnemies;
+    public int numberOfEnemies = 5;
     Scanner sc;
     ArrayList<Ring> body = new ArrayList<Ring>();
     ArrayList<Enemy> enemies = new ArrayList<Enemy>();
@@ -33,7 +33,7 @@ public class Character extends JPanel {
             drawEnemy();
             drawCharacter();
 
-            sleep(100);
+            sleep();
 
             move();
             checkCollision();
@@ -42,9 +42,19 @@ public class Character extends JPanel {
 
     }
 
-    public void sleep(int time) {
+    public void sleep() {
         try {
-            Thread.sleep(time);
+            if (body.size() > 0 && body.size() < 5) {
+                Thread.sleep(200);
+            } else if (body.size() >= 5 && body.size() < 15) {
+                Thread.sleep(150);
+            } else if (body.size() >= 15 && body.size() < 50) {
+                Thread.sleep(120);
+            } else if (body.size() >= 50 && body.size() < 100) {
+                Thread.sleep(100);
+            } else {
+                Thread.sleep(80);
+            }
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
@@ -95,13 +105,13 @@ public class Character extends JPanel {
         for (int x = 0; x < enemies.size(); x++) {
             Enemy e = enemies.get(x);
             g.setColor(e.color);
-            g.fillOval(e.posX, e.posY, 10, 10);
+            g.fillRect(e.posX, e.posY, 10, 10);
         }
     }
 
     public void showScore() {
         g.setFont(new Font("Calibri", Font.PLAIN, 15));
-        g.drawString(Integer.toString(body.size()), 10, Window.height - 10);
+        g.drawString(("Score : " + Integer.toString(body.size())), 10, Window.height - 10);
     }
 
     public void drawCharacter() {
@@ -109,7 +119,7 @@ public class Character extends JPanel {
             Ring r;
             r = body.get(i);
             g.setColor(r.color);
-            g.fillOval(r.posX, r.posY, 10, 10);
+            g.fillRect(r.posX, r.posY, 10, 10);
             showScore();
         }
     }
