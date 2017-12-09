@@ -6,16 +6,18 @@ import java.util.Scanner;
 import javax.swing.*;
 
 public class Character extends JPanel {
-
+    public int WindowWidth = ((Window.width - 20) / 10) - 2;
+    public int WindowHeight = ((Window.height - 20) / 10) - 2;
+    public int randX, randY;
     public int size;
     Graphics g;
     public boolean play = true;
     public int numberOfEnemies = 5;
     Scanner sc;
-    ArrayList<Ring> body = new ArrayList<Ring>();
-    ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+    public static ArrayList<Ring> body = new ArrayList<Ring>();
+    public static ArrayList<Enemy> enemies = new ArrayList<Enemy>();
     // Initialisation du tablau des obstacles
-    Obstacle[][] obstacles = new Obstacle[40][40];
+    public static Obstacle[][] obstacles = new Obstacle[40][40];
     
     public int direction = 4;
 
@@ -35,8 +37,13 @@ public class Character extends JPanel {
             g.setColor(Color.DARK_GRAY);
             g.fillRect(0, 0, Window.width, Window.height);
             
-            //Création des ennemis
-            createEnemies();
+            while (enemies.size() < numberOfEnemies) {
+                int r1 = randomPositionX();
+                int r2 = randomPositionY();
+                //Création des ennemis
+                createEnemy(r1,r2);
+            }
+            
             //Dessin des obstacles
             drawObstacles();
             //Dessin des ennemis
@@ -73,7 +80,7 @@ public class Character extends JPanel {
     /**
      * Fonction qui remplit le tableau des obstacles
      */
-    public void fillArray(){
+    public static void fillArray(){
         for (int i = 0; i < 40; i++) {
             for (int j = 0; j < 40; j++) {
                 //Génération d'un entier entre 1 et 100
@@ -99,36 +106,59 @@ public class Character extends JPanel {
             }
         }
     }
+    
+    /**
+     * Fonction qui génére une position horizontale selon la taille de la fenêtre
+     * @return position horizontale
+     */
+    public int randomPositionX(){
+        randX = (int) (Math.random() * (WindowWidth)) + 3;
+        randX = (randX * 10);
+        return randX;
+    }
+    
+    /**
+     * Fonction qui génére une position verticale selon la taille de la fenêtre
+     * @return position verticale
+     */
+    public int randomPositionY(){
+        randY = (int) (Math.random() * (WindowHeight)) + 3;
+        randY = (randY * 10);
+        return randY;
+    }
 
     /**
-     * Fonction qui crée les ennemies
+     * Fonction qui crée un ennemi
+     * @param xPos position horizontale de l'ennemi à ajouter
+     * @param yPos position verticale de l'ennemi à ajouter
+     * @return état de la création
      */
-    public void createEnemies() {
-        int randX, randY;
+    public static boolean createEnemy(int xPos, int yPos) {
         Boolean creation = true;
 
-        while (enemies.size() < numberOfEnemies) {
-            int WindowWidth = ((Window.width - 20) / 10) - 2;
-            int WindowHeight = ((Window.height - 20) / 10) - 2;
-
-            randX = (int) (Math.random() * (WindowWidth)) + 3;
-            randY = (int) (Math.random() * (WindowHeight)) + 3;
-
-            randX = (randX * 10);
-            randY = (randY * 10);
-
-            for (int i = 0; i < body.size(); i++) {
-                Ring ifExist = body.get(i);
-                if (randX == ifExist.posX && randY == ifExist.posY) {
-                    creation = false;
-                }
+        //On vérifie que le serpent n'est pas dans cette zone
+        for (int i = 0; i < body.size(); i++) {
+            Ring ifExist = body.get(i);
+            if (xPos == ifExist.posX && yPos == ifExist.posY) {
+                creation = false;
+                return false;
             }
-
-            if (creation == true) {
-                enemies.add(new Enemy(randX, randY, Color.GREEN));
+        }
+        
+        //On vérifie qu'un ennemi n'existe pas déjà à cette position
+        for (int j = 0; j < enemies.size(); j++) {
+            Enemy ifExist = enemies.get(j);
+            if (xPos == ifExist.posX && yPos == ifExist.posY) {
+                creation = false;
+                return false;
             }
         }
 
+        //Si les deux conditions précédentes sont vérifiées, on crée l'ennemi
+        if (creation == true) {
+            enemies.add(new Enemy(xPos, yPos, Color.GREEN));
+        }
+        return true;
     }
 
     /**
@@ -163,7 +193,7 @@ public class Character extends JPanel {
      */
     public void showScore() {
         g.setFont(new Font("Calibri", Font.PLAIN, 15));
-        g.drawString(("Score : " + Integer.toString(body.size())), 10, Window.height - 10);
+        g.drawString(("Score : " + Integer.toString(body.size()-4)), 10, Window.height - 10);
     }
 
     /**
