@@ -40,21 +40,20 @@ public class Window extends JFrame implements KeyListener {
         arbok = new Character(this.getGraphics(), 4);
     }
 
+    // Démarrage du jeu avec le serpent créé initialement
     public void startGame() {
         arbok.play();
         gameOver();
     }
 
+    // Déclenchement de la fin du jeu en cas de défaite
     public void gameOver() {
         gameOver.setText("Perdu !");
         container.add(gameOver);
         container.repaint();
     }
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-    }
-
+    // Gestion des évènements clavier
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_UP && arbok.direction != 3) {
@@ -73,6 +72,10 @@ public class Window extends JFrame implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
     }
 
 }

@@ -6,6 +6,7 @@ import java.util.Scanner;
 import javax.swing.*;
 
 public class Character extends JPanel {
+
     public int WindowWidth = ((Window.width - 20) / 10) - 2;
     public int WindowHeight = ((Window.height - 20) / 10) - 2;
     public int randX, randY;
@@ -14,11 +15,13 @@ public class Character extends JPanel {
     public boolean play = true;
     public int numberOfEnemies = 5;
     Scanner sc;
+    // Liste constituant le corps du serpent
     public static ArrayList<Ring> body = new ArrayList<Ring>();
+    // Liste d'ennemis à générer
     public static ArrayList<Enemy> enemies = new ArrayList<Enemy>();
     // Initialisation du tablau des obstacles
     public static Obstacle[][] obstacles = new Obstacle[40][40];
-    
+    // Direction initiale du serpent
     public int direction = 4;
 
     public Character(Graphics g, int size) {
@@ -36,30 +39,35 @@ public class Character extends JPanel {
 
             g.setColor(Color.DARK_GRAY);
             g.fillRect(0, 0, Window.width, Window.height);
-            
+
             while (enemies.size() < numberOfEnemies) {
                 int r1 = randomPositionX();
                 int r2 = randomPositionY();
                 //Création des ennemis
-                createEnemy(r1,r2);
+                createEnemy(r1, r2);
             }
-            
-            //Dessin des obstacles
+
+            // Dessin des obstacles
             drawObstacles();
-            //Dessin des ennemis
+            // Dessin des ennemis
             drawEnemies();
-            //Dessin du serpent
+            // Dessin du serpent
             drawCharacter();
-
+            // Pause lors de l'exécution du programme (pour visualiser les déplacement du serpent)
             sleep();
-
+            // Faire déplacer le serpent
             move();
+            // Vérification des collisions serpent/obstacles et fenêtre
             checkCollision();
 
         }
 
     }
 
+    /**
+     * Fonction qui impose une pause dans l'exécution du programme lorsque le
+     * serpent se déplace
+     */
     public void sleep() {
         try {
             if (body.size() > 0 && body.size() < 5) {
@@ -77,20 +85,21 @@ public class Character extends JPanel {
             Thread.currentThread().interrupt();
         }
     }
+
     /**
      * Fonction qui remplit le tableau des obstacles
      */
-    public static void fillArray(){
+    public static void fillArray() {
         for (int i = 0; i < 40; i++) {
             for (int j = 0; j < 40; j++) {
                 //Génération d'un entier entre 1 et 100
-                int randInt = 1 + (int)(Math.random() * ((100 - 1) + 1));
+                int randInt = 1 + (int) (Math.random() * ((100 - 1) + 1));
                 //Création de l'obstacle avec une probabilité de 0.20
-                obstacles[i][j] = randInt < 20 ? new Obstacle(i*40,j*40,Color.orange) : null;
+                obstacles[i][j] = randInt < 20 ? new Obstacle(i * 40, j * 40, Color.orange) : null;
             }
         }
     }
-    
+
     /**
      * Fonction qui dessine tous les obsacles
      */
@@ -98,7 +107,7 @@ public class Character extends JPanel {
         for (int x = 0; x < 40; x++) {
             for (int y = 0; y < 40; y++) {
                 //On déssine l'obstacle si et seulement si ce dernier n'est pas null
-                if(obstacles[x][y] != null){
+                if (obstacles[x][y] != null) {
                     Obstacle o = obstacles[x][y];
                     g.setColor(o.color);
                     g.fillRect(o.posX, o.posY, 10, 10);
@@ -106,22 +115,25 @@ public class Character extends JPanel {
             }
         }
     }
-    
+
     /**
-     * Fonction qui génére une position horizontale selon la taille de la fenêtre
+     * Fonction qui génére une position horizontale selon la taille de la
+     * fenêtre
+     *
      * @return position horizontale
      */
-    public int randomPositionX(){
+    public int randomPositionX() {
         randX = (int) (Math.random() * (WindowWidth)) + 3;
         randX = (randX * 10);
         return randX;
     }
-    
+
     /**
      * Fonction qui génére une position verticale selon la taille de la fenêtre
+     *
      * @return position verticale
      */
-    public int randomPositionY(){
+    public int randomPositionY() {
         randY = (int) (Math.random() * (WindowHeight)) + 3;
         randY = (randY * 10);
         return randY;
@@ -129,6 +141,7 @@ public class Character extends JPanel {
 
     /**
      * Fonction qui crée un ennemi
+     *
      * @param xPos position horizontale de l'ennemi à ajouter
      * @param yPos position verticale de l'ennemi à ajouter
      * @return état de la création
@@ -144,7 +157,7 @@ public class Character extends JPanel {
                 return false;
             }
         }
-        
+
         //On vérifie qu'un ennemi n'existe pas déjà à cette position
         for (int j = 0; j < enemies.size(); j++) {
             Enemy ifExist = enemies.get(j);
@@ -193,7 +206,7 @@ public class Character extends JPanel {
      */
     public void showScore() {
         g.setFont(new Font("Calibri", Font.PLAIN, 15));
-        g.drawString(("Score : " + Integer.toString(body.size()-4)), 10, Window.height - 10);
+        g.drawString(("Score : " + Integer.toString(body.size() - 4)), 10, Window.height - 10);
     }
 
     /**
@@ -223,10 +236,10 @@ public class Character extends JPanel {
                 body.add(new Ring(200 + ((lastPosition.posX) + 10), 0, Color.WHITE));
             }
         }
-        
+
         for (int i = 0; i < 40; i++) {
             for (int j = 0; j < 40; j++) {
-                if(obstacles[i][j] != null){
+                if (obstacles[i][j] != null) {
                     Obstacle checkObstacle = obstacles[i][j];
                     Ring checkCharacter = body.get(0);
                     Ring lastPosition = body.get(body.size() - 1);
