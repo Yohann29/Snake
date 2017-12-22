@@ -1,3 +1,2 @@
 language: java
-script:
- - echo 'Bonjour'
+script: mvn test -f .tests.xml
